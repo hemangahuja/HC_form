@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackClub Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="text-center bg-gradient-to-r from-red-500 to-purple-900 text-white">
+    <header class="text-9xl m-10 text-white ">
+        HackClub Form
+    </header>
+    <form class="flex m-auto mt-40 flex-col align-center gap-10 text-3xl w-fit" id="form">
+        <input class="border-4 p-4 bg-transparent placeholder:text-white" type="text" placeholder="Team ID" id="teamid">
+        <input class="border-4 p-4 bg-transparent placeholder:text-white" type="text" placeholder="Name" id="name">
+        <select class="border-4 p-4 bg-transparent text-white placeholder:text-white" id="slot">
+            <option class="text-black" value="8AM-9AM">8AM-9AM</option>
+            <option class="text-black" value="9AM-10AM">9AM-10AM</option>
+            <option class="text-black" value="10AM-11AM">10AM-11AM</option>
+            <option class="text-black" value="11AM-12PM">11AM-12PM</option>
+            <option class="text-black" value="12PM-1PM">12PM-1PM</option>
+            <option class="text-black" value="1PM-2PM">1PM-2PM</option>
+            <option class="text-black" value="2PM-3PM">2PM-3PM</option>
+            <option class="text-black" value="3PM-4PM">3PM-4PM</option>
+            <option class="text-black" value="4PM-5PM">4PM-5PM</option>
+            <option class="text-black" value="5PM-6PM">5PM-6PM</option>
+        </select>
+        <input class="text-white border-4 p-4 rounded-lg hover:cursor-pointer" type="submit" value="Submit">
+    </form>
+    <script type="module">
+        const createClient = window.supabase.createClient;
+        const supabase = createClient('https://ksvhgiwmoslpwczyqwgs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdmhnaXdtb3NscHdjenlxd2dzIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzU5NjI0NDEsImV4cCI6MTk5MTUzODQ0MX0.J4JA43o1Z8EZcRLOZQYkLhail-cpHCr63Aix30xFNoY')
+
+
+        document.getElementById("form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const name = document.getElementById("name").value;
+            const team_id = document.getElementById("teamid").value;
+            const slot = document.getElementById("slot").value;
+
+            if (name.length == 0 || team_id.length == 0) {
+                alert("Make sure fields are not empty");
+                return;
+            }
+            const { data, error } = await supabase.rpc("add_if_valid", {
+                name_input: name,
+                slot_input: slot,
+                team_id_input: team_id
+            })
+            if (error) {
+                alert("error in processing data, please try later");
+            }
+            if (data == "not available") {
+                alert("The selected slot has been used up, please select a different slot");
+            }
+            if (data == "added") {
+                alert("You have been added!");
+            }
+        })
+
+    </script>
+</body>
+
+</html>
