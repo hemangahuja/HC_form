@@ -52,7 +52,8 @@
                 team_id_input: team_id
             })
             if (error) {
-                alert("error in processing data, please try later");
+                if (error.code == 23505) alert("Registration with same team id already exists");
+                else alert("Error in processing data, please try later");
             }
             if (data == "not available") {
                 alert("The selected slot has been used up, please select a different slot");
